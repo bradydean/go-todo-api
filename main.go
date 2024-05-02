@@ -108,7 +108,7 @@ func main() {
 					slog.String("remote_ip", v.RemoteIP),
 				)
 			} else {
-				logger.LogAttrs(context.Background(), slog.LevelError, "msg",
+				logger.LogAttrs(context.Background(), slog.LevelError, msg,
 					slog.String("uri", v.URI),
 					slog.Int("status", v.Status),
 					slog.Duration("latency", v.Latency),
