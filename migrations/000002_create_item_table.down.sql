@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS "todo"."Items";
+DROP TABLE IF EXISTS "todo"."items";
