@@ -71,6 +71,8 @@ var NotFoundError = echo.NewHTTPError(
 	map[string]string{"message": "Not found"},
 )
 
+var InternalServerError = echo.NewHTTPError(http.StatusInternalServerError)
+
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
@@ -158,7 +160,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error fetching lists: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		var lists = make([]ListResponse, 0, len(records))
@@ -198,7 +200,7 @@ func main() {
 				return NotFoundError
 			}
 			c.Logger().Errorf("Error fetching list: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ListResponse(record))
@@ -234,7 +236,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error creating list: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.JSON(http.StatusCreated, ListResponse(record))
@@ -279,7 +281,7 @@ func main() {
 				return NotFoundError
 			}
 			c.Logger().Errorf("Error updating list: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ListResponse(record))
@@ -330,7 +332,7 @@ func main() {
 				return NotFoundError
 			}
 			c.Logger().Errorf("Error updating list: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ListResponse(record))
@@ -356,7 +358,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error deleting list: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.NoContent(http.StatusNoContent)
@@ -387,7 +389,7 @@ func main() {
 					return NotFoundError
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return echo.NewHTTPError(http.StatusInternalServerError)
+				return InternalServerError
 			}
 		}
 
@@ -406,7 +408,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error fetching items: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		var items = make([]ItemResponse, 0, len(records))
@@ -443,7 +445,7 @@ func main() {
 					return NotFoundError
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return echo.NewHTTPError(http.StatusInternalServerError)
+				return InternalServerError
 			}
 		}
 
@@ -467,7 +469,7 @@ func main() {
 				return NotFoundError
 			}
 			c.Logger().Errorf("Error fetching item: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ItemResponse(record))
@@ -504,7 +506,7 @@ func main() {
 					return NotFoundError
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return echo.NewHTTPError(http.StatusInternalServerError)
+				return InternalServerError
 			}
 		}
 
@@ -531,7 +533,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error creating item: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.JSON(http.StatusCreated, ItemResponse(record))
@@ -568,7 +570,7 @@ func main() {
 					return NotFoundError
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return echo.NewHTTPError(http.StatusInternalServerError)
+				return InternalServerError
 			}
 		}
 
@@ -596,7 +598,7 @@ func main() {
 				return NotFoundError
 			}
 			c.Logger().Errorf("Error updating item: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ItemResponse(record))
@@ -633,7 +635,7 @@ func main() {
 					return NotFoundError
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return echo.NewHTTPError(http.StatusInternalServerError)
+				return InternalServerError
 			}
 		}
 
@@ -668,7 +670,7 @@ func main() {
 				return NotFoundError
 			}
 			c.Logger().Errorf("Error fetching item: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ItemResponse(record))
@@ -697,7 +699,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error deleting item: %v\n", err)
-			return echo.NewHTTPError(http.StatusInternalServerError)
+			return InternalServerError
 		}
 
 		return c.NoContent(http.StatusNoContent)
