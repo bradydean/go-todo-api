@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -74,6 +75,8 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
 	e := echo.New()
 	e.HideBanner = true
 	e.HidePort = true
@@ -90,16 +93,33 @@ func main() {
 		LogUserAgent: true,
 		LogRemoteIP:  true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-			_, err := fmt.Printf(
-				"%s \"%s %s %s\" %d \"%s\"\n",
-				v.RemoteIP,
-				v.Method,
-				v.URI,
-				v.Protocol,
-				v.Status,
-				v.UserAgent,
+			msg := fmt.Sprintf(
+				"uri=%s status=%d latency=%s protocol=%s method=%s user_agent=%s remote_ip=%s",
+				v.URI, v.Status, v.Latency, v.Protocol, v.Method, v.UserAgent, v.RemoteIP,
 			)
-			return err
+			if v.Error == nil {
+				logger.LogAttrs(context.Background(), slog.LevelInfo, msg,
+					slog.String("uri", v.URI),
+					slog.Int("status", v.Status),
+					slog.Duration("latency", v.Latency),
+					slog.String("protocol", v.Protocol),
+					slog.String("method", v.Method),
+					slog.String("user_agent", v.UserAgent),
+					slog.String("remote_ip", v.RemoteIP),
+				)
+			} else {
+				logger.LogAttrs(context.Background(), slog.LevelError, "msg",
+					slog.String("uri", v.URI),
+					slog.Int("status", v.Status),
+					slog.Duration("latency", v.Latency),
+					slog.String("protocol", v.Protocol),
+					slog.String("method", v.Method),
+					slog.String("err", v.Error.Error()),
+					slog.String("user_agent", v.UserAgent),
+					slog.String("remote_ip", v.RemoteIP),
+				)
+			}
+			return nil
 		},
 	}))
 

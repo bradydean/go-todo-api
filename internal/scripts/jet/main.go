@@ -3,7 +3,7 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"os"
 
 	"github.com/go-jet/jet/v2/generator/metadata"
@@ -29,6 +29,7 @@ func main() {
 	)
 
 	if err != nil {
-		log.Fatalf("Error running jet: %v", err)
+		slog.Error("Error running jet: %v", err)
+		os.Exit(1)
 	}
 }
