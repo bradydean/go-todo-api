@@ -23,7 +23,7 @@ $ export AUTH0_AUDIENCE="https://example.auth0.com/api/v2/
 ## migrate database
 
 ```bash
-$ go run -tags postgres github.com/golang-migrate/migrate/v4/cmd/migrate -path ./migrations -database postgresql@localhost/postgres?sslmode=disable up
+$ go run -tags postgres github.com/golang-migrate/migrate/v4/cmd/migrate -path ./migrations -database postgresql://postgres@localhost/postgres?sslmode=disable up
 ```
 
 ## generate jet files
