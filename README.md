@@ -15,7 +15,7 @@ A simple todo API written in Go showcasing the use of JWT authentication and Pos
 A `.env` file also works.
 
 ```bash
-$ export DATABASE_URL="postgres://user:password@localhost:5432/dbname?sslmode=disable"
+$ export DATABASE_URL="postgres://postgres@localhost/postgres?sslmode=disable"
 $ export AUTH0_DOMAIN="example.auth0.com"
 $ export AUTH0_AUDIENCE="https://example.auth0.com/api/v2/
 ```
@@ -23,7 +23,7 @@ $ export AUTH0_AUDIENCE="https://example.auth0.com/api/v2/
 ## migrate database
 
 ```bash
-$ go run -tags postgres github.com/golang-migrate/migrate/v4/cmd/migrate -path ./migrations -database ${DATABASE_URL} up
+$ go run -tags postgres github.com/golang-migrate/migrate/v4/cmd/migrate -path ./migrations -database postgresql@localhost/postgres?sslmode=disable up
 ```
 
 ## generate jet files
