@@ -66,12 +66,14 @@ type ItemsRecord struct {
 	IsComplete bool   `db:"items.is_complete"`
 }
 
-var NotFoundError = echo.NewHTTPError(
-	http.StatusNotFound,
-	map[string]string{"message": "Not found"},
-)
+var (
+	ErrNotFound = echo.NewHTTPError(
+		http.StatusNotFound,
+		map[string]string{"message": "Not found"},
+	)
 
-var InternalServerError = echo.NewHTTPError(http.StatusInternalServerError)
+	ErrInternalServerError = echo.NewHTTPError(http.StatusInternalServerError)
+)
 
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
@@ -160,7 +162,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error fetching lists: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		var lists = make([]ListResponse, 0, len(records))
@@ -197,10 +199,10 @@ func main() {
 
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return NotFoundError
+				return ErrNotFound
 			}
 			c.Logger().Errorf("Error fetching list: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ListResponse(record))
@@ -236,7 +238,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error creating list: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.JSON(http.StatusCreated, ListResponse(record))
@@ -278,10 +280,10 @@ func main() {
 
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return NotFoundError
+				return ErrNotFound
 			}
 			c.Logger().Errorf("Error updating list: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ListResponse(record))
@@ -329,10 +331,10 @@ func main() {
 
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return NotFoundError
+				return ErrNotFound
 			}
 			c.Logger().Errorf("Error updating list: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ListResponse(record))
@@ -358,7 +360,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error deleting list: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.NoContent(http.StatusNoContent)
@@ -386,10 +388,10 @@ func main() {
 
 			if err != nil {
 				if errors.Is(err, pgx.ErrNoRows) {
-					return NotFoundError
+					return ErrNotFound
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return InternalServerError
+				return ErrInternalServerError
 			}
 		}
 
@@ -408,7 +410,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error fetching items: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		var items = make([]ItemResponse, 0, len(records))
@@ -442,10 +444,10 @@ func main() {
 
 			if err != nil {
 				if errors.Is(err, pgx.ErrNoRows) {
-					return NotFoundError
+					return ErrNotFound
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return InternalServerError
+				return ErrInternalServerError
 			}
 		}
 
@@ -466,10 +468,10 @@ func main() {
 
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return NotFoundError
+				return ErrNotFound
 			}
 			c.Logger().Errorf("Error fetching item: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ItemResponse(record))
@@ -503,10 +505,10 @@ func main() {
 
 			if err != nil {
 				if errors.Is(err, pgx.ErrNoRows) {
-					return NotFoundError
+					return ErrNotFound
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return InternalServerError
+				return ErrInternalServerError
 			}
 		}
 
@@ -533,7 +535,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error creating item: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.JSON(http.StatusCreated, ItemResponse(record))
@@ -567,10 +569,10 @@ func main() {
 
 			if err != nil {
 				if errors.Is(err, pgx.ErrNoRows) {
-					return NotFoundError
+					return ErrNotFound
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return InternalServerError
+				return ErrInternalServerError
 			}
 		}
 
@@ -595,10 +597,10 @@ func main() {
 
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return NotFoundError
+				return ErrNotFound
 			}
 			c.Logger().Errorf("Error updating item: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ItemResponse(record))
@@ -632,10 +634,10 @@ func main() {
 
 			if err != nil {
 				if errors.Is(err, pgx.ErrNoRows) {
-					return NotFoundError
+					return ErrNotFound
 				}
 				c.Logger().Errorf("Error checking if list exists: %v\n", err)
-				return InternalServerError
+				return ErrInternalServerError
 			}
 		}
 
@@ -667,10 +669,10 @@ func main() {
 
 		if err != nil {
 			if errors.Is(err, pgx.ErrNoRows) {
-				return NotFoundError
+				return ErrNotFound
 			}
 			c.Logger().Errorf("Error fetching item: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.JSON(http.StatusOK, ItemResponse(record))
@@ -699,7 +701,7 @@ func main() {
 
 		if err != nil {
 			c.Logger().Errorf("Error deleting item: %v\n", err)
-			return InternalServerError
+			return ErrInternalServerError
 		}
 
 		return c.NoContent(http.StatusNoContent)
